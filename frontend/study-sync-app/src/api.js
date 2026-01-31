@@ -1,19 +1,17 @@
 import axios from "axios";
 
-// API Configuration - Update this to your deployed backend URL
-const API_BASE_URL =
-  baseURL: process.env.VUE_APP_API_URL
-
+// API Configuration (Render backend)
+const API_BASE_URL = process.env.VUE_APP_API_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 30000, // 30 second timeout
+  timeout: 30000,
 });
 
-// Request interceptor for adding auth token
+// Add JWT token to requests
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -22,44 +20,22 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor for handling errors
+// Handle responses
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   (error) => {
     if (error.response) {
-      // Server responded with error status
-      switch (error.response.status) {
-        case 401:
-          // Unauthorized - clear token and redirect to login
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          if (window.location.pathname !== "/login") {
-            window.location.href = "/login";
-          }
-          break;
-        case 403:
-          console.error("Access forbidden");
-          break;
-        case 404:
-          console.error("Resource not found");
-          break;
-        case 500:
-          console.error("Server error");
-          break;
+      if (error.response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
       }
-    } else if (error.request) {
-      // Request made but no response
-      console.error("Network error - please check your connection");
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;
