@@ -23,17 +23,26 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Handle responses
+// Handle responses (SAFE logout)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response) {
-      if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
+      const token = localStorage.getItem("token");
+
+      // Logout ONLY if token exists (real session)
+      if (token) {
+        console.warn("Session expired. Logging out...");
+
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        window.location.href = "/login";
+
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
       }
     }
+
     return Promise.reject(error);
   }
 );
