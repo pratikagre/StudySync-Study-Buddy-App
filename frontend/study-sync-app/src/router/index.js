@@ -3,7 +3,7 @@ import HomePage from "../views/HomePage.vue";
 import UserRegister from "../components/UserRegister.vue";
 import UserLogin from "../components/UserLogin.vue";
 import UserProfile from "../components/UserProfile.vue";
-import store from "../store";
+
 import NotFound from "@/components/NotFound.vue";
 import LandingPage from "@/components/LandingPage.vue";
 import ForgotPassword from "@/components/ForgotPassword.vue";
@@ -58,6 +58,8 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+
 
 
 export default router;
