@@ -1,23 +1,51 @@
 #!/usr/bin/env node
 
 /**
- * Local Development Bootstrap
- * This file only loads environment variables
- * and imports the main server.
- * The actual app.listen() lives in src/server.js
+ * Local Development Server
+ * This file starts the server for local development
  */
 
 require("dotenv").config();
+const app = require("./src/server");
 
-// Importing server automatically starts it
-require("./src/server");
+const PORT = process.env.PORT || 6000;
+
+
+app.listen(PORT, () => {
+  console.log("╔════════════════════════════════════════════════════════════╗");
+  console.log("║                                                            ║");
+  console.log("║                🚀 StudySync API Server                     ║");
+  console.log("║                                                            ║");
+  console.log("╠════════════════════════════════════════════════════════════╣");
+  console.log(
+    `║  Server:           http://localhost:${PORT}                   ║`,
+  );
+  console.log(
+    `║  API Docs:         http://localhost:${PORT}/api-docs         ║`,
+  );
+  console.log(
+    `║  Health Check:     http://localhost:${PORT}/health           ║`,
+  );
+  console.log(
+    `║  Swagger JSON:     http://localhost:${PORT}/swagger.json     ║`,
+  );
+  console.log("╠════════════════════════════════════════════════════════════╣");
+  console.log(
+    `║  Environment:      ${process.env.NODE_ENV || "development"}                 ║`,
+  );
+  console.log(
+    `║  MongoDB:          ${process.env.MONGO_URI ? "Connected" : "Not configured"}                   ║`,
+  );
+  console.log("╚════════════════════════════════════════════════════════════╝");
+  console.log("");
+});
 
 process.on("SIGTERM", () => {
-  console.log("\n🛑 SIGTERM received. Shutting down...");
+  console.log("\n🛑 SIGTERM signal received: closing HTTP server");
   process.exit(0);
 });
 
 process.on("SIGINT", () => {
-  console.log("\n🛑 SIGINT received. Shutting down...");
+  console.log("\n🛑 SIGINT signal received: closing HTTP server");
   process.exit(0);
 });
