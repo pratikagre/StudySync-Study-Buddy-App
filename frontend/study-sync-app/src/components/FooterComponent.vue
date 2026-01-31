@@ -9,23 +9,18 @@
         <!-- Social Media Icons -->
         <v-col cols="12" md="6" class="text-center footer-icons">
           <a
-            href="https://github.com/hoangsonww"
+            href="https://github.com/pratikagre"
             target="_blank"
             class="footer-icon-link"
           >
             <v-icon small class="footer-icon">mdi-github</v-icon>
             <!-- GitHub Icon -->
           </a>
-          <a
-            href="https://sonnguyenhoang.com"
-            target="_blank"
-            class="footer-icon-link"
-          >
-            <v-icon small class="footer-icon">mdi-web</v-icon>
+          
             <!-- Website Icon -->
           </a>
           <a
-            href="mailto:hoangson091104@gmail.com"
+            href="mailto:agrepratik150@gmail.com"
             target="_blank"
             class="footer-icon-link"
           >
@@ -33,7 +28,7 @@
             <!-- Email Icon -->
           </a>
           <a
-            href="https://www.linkedin.com/in/hoangsonw"
+            href="https://www.linkedin.com/in/pratik-agre-74b18a325/"
             target="_blank"
             class="footer-icon-link"
           >

@@ -16,7 +16,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: "*",
+  origin: [
+    "https://studysync-study-buddy-app-1.onrender.com"
+  ],
+
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
