@@ -16,14 +16,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   cors({
-  origin: [
-    "https://studysync-study-buddy-app-1.onrender.com"
-  ],
-
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    origin: "*",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-  }),
+  })
 );
+
 
 app.use(express.static(path.join(__dirname, "../public")));
 

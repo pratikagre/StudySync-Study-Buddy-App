@@ -1,46 +1,32 @@
 import axios from "axios";
 
-// API Configuration (Render backend)
-const API_BASE_URL = process.env.VUE_APP_API_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL || process.env.VUE_APP_API_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 30000,
 });
 
-// Add JWT token to requests
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
 
-// Handle responses (SAFE logout)
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      const token = localStorage.getItem("token");
+    if (error.response?.status === 401) {
+      console.log("JWT expired / invalid");
 
-      // Logout ONLY if token exists (real session)
-      if (token) {
-        console.warn("Session expired. Logging out...");
-
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-
-        if (window.location.pathname !== "/login") {
-          window.location.href = "/login";
-        }
-      }
+      localStorage.clear();
+      window.location.href = "/login";
     }
 
     return Promise.reject(error);

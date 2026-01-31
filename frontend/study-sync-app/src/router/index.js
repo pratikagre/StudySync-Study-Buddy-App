@@ -50,12 +50,14 @@ const router = createRouter({
 
 // Route guard for authentication
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = store.getters.isAuthenticated;
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next("/landing");
+  const token = localStorage.getItem("token");
+
+  if (to.meta.requiresAuth && !token) {
+    next("/login");
   } else {
     next();
   }
 });
+
 
 export default router;
