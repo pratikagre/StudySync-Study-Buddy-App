@@ -1,44 +1,64 @@
 import axios from "axios";
 
-// Vue CLI uses VUE_APP_*
+// API Configuration - Update this to your deployed backend URL
 const API_BASE_URL =
-  process.env.VUE_APP_API_URL ||
-  "https://studysync-study-buddy-app-hyfc.onrender.com/api";
+  process.env.VUE_APP_API_URL || "https://studysync-study-buddy-app-hyfc.onrender.com";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 30000,
+  timeout: 30000, // 30 second timeout
 });
 
-// Attach token
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Handle 401 only ONCE
-api.interceptors.response.use(
-  (res) => res,
-  (err) => {
-    if (err.response && err.response.status === 401) {
-      console.log("Session expired");
-
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-
-      if (window.location.pathname !== "/login") {
-        window.location.replace("/login");
-      }
+// Request interceptor for adding auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
     }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
 
-    return Promise.reject(err);
-  }
+// Response interceptor for handling errors
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response) {
+      // Server responded with error status
+      switch (error.response.status) {
+        case 401:
+          // Unauthorized - clear token and redirect to login
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          if (window.location.pathname !== "/login") {
+            window.location.href = "/login";
+          }
+          break;
+        case 403:
+          console.error("Access forbidden");
+          break;
+        case 404:
+          console.error("Resource not found");
+          break;
+        case 500:
+          console.error("Server error");
+          break;
+      }
+    } else if (error.request) {
+      // Request made but no response
+      console.error("Network error - please check your connection");
+    }
+    return Promise.reject(error);
+  },
 );
 
 export default api;
