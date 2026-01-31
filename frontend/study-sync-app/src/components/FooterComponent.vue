@@ -17,8 +17,7 @@
             <!-- GitHub Icon -->
           </a>
           
-            <!-- Website Icon -->
-          </a>
+         
           <a
             href="mailto:agrepratik150@gmail.com"
             target="_blank"
