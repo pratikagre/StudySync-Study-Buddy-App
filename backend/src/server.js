@@ -77,10 +77,12 @@ app.use((err, req, res, next) => {
 });
 
 if (process.env.NODE_ENV !== "production") {
-  const PORT =  6000;
-  app.listen(PORT, "127.0.0.1", () => {
+  const PORT = process.env.PORT || 6000;
+
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
+
 
 }
 
